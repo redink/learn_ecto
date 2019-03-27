@@ -2,6 +2,7 @@ defmodule LearnEcto.Database.Table.HistoryEmail do
   @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   alias LearnEcto.Database.Repo
 
@@ -20,8 +21,15 @@ defmodule LearnEcto.Database.Table.HistoryEmail do
     |> foreign_key_constraint(:user_id, name: "history_email_user_id_fkey")
   end
 
-  def insert(history_email) do
-    Repo.insert(insert_changeset(history_email), on_conflict: :nothing)
+  def get_all_by_email(email) do
+    from(he in __MODULE__, where: he.email == ^email)
+    |> select_merge([he], %{user_id: he.user_id})
+    |> preload(:user)
+    |> Repo.all()
+  end
+
+  def get_by_user_id_and_email(user_id, email) do
+    Repo.get_by(from(__MODULE__, preload: [:user]), user_id: user_id, email: email)
   end
 
   # __end_of_module__
