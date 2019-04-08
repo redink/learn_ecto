@@ -13,6 +13,7 @@ defmodule LearnEcto.Database.Table.User do
     field(:bio, :string, [])
     field(:name, :string, [])
     field(:phone, :string, [])
+    field(:if_mfa, :boolean, [])
     has_many(:history_email, HistoryEmail, on_delete: :delete_all, on_replace: :delete)
     timestamps(type: :utc_datetime_usec)
   end
@@ -20,7 +21,7 @@ defmodule LearnEcto.Database.Table.User do
   def operation_changeset(params, data \\ __MODULE__) do
     data
     |> struct()
-    |> cast(params, [:id, :email, :bio, :name, :phone])
+    |> cast(params, [:id, :email, :bio, :name, :phone, :if_mfa])
     |> validate_required([:email])
     |> unique_constraint(:id, name: "user_pkey")
     |> unique_constraint(:email)
@@ -39,6 +40,12 @@ defmodule LearnEcto.Database.Table.User do
 
   def insert(changeset, options \\ []) do
     Repo.insert(changeset, options)
+  end
+
+  def update(user, update_fields) do
+    update_fields
+    |> operation_changeset(user)
+    |> Repo.update()
   end
 
   # __end_of_module__

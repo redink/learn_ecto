@@ -8,6 +8,7 @@ defmodule LearnEcto.Database.Repo.Migrations.AddUserTable do
       add(:bio, :text)
       add(:name, :varchar, size: 64)
       add(:phone, :varchar, size: 64)
+      add(:if_mfa, :boolean)
       timestamps()
     end
 
@@ -16,6 +17,13 @@ defmodule LearnEcto.Database.Repo.Migrations.AddUserTable do
 
     create table("history_email", primary_key: false) do
       add(:email, :varchar, size: 64, primary_key: true)
+      add(:user_id, references("user", type: :binary_id), primary_key: true)
+      timestamps()
+    end
+
+    create table("mfa", primary_key: false) do
+      add(:mfa_secret, :varchar, size: 128)
+      add(:recovery_codes, :text)
       add(:user_id, references("user", type: :binary_id), primary_key: true)
       timestamps()
     end
