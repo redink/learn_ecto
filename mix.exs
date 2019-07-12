@@ -23,8 +23,8 @@ defmodule LearnEcto.MixProject do
   defp deps do
     [
       {:postgrex, "~> 0.14"},
-      {:ecto, "~> 3.0"},
-      {:ecto_sql, "~> 3.0"}
+      {:ecto, "~> 3.1"},
+      {:ecto_sql, "~> 3.1"}
     ]
   end
 end
